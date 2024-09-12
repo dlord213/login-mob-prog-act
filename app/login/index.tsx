@@ -20,71 +20,61 @@ export default function Page() {
       </Link>
       <View style={{ gap: 8 }}>
         <Text
-          style={{
-            fontFamily: "WorkSans_700Bold",
-            color: Colors.Text_Light.Default,
-            fontSize: 24,
-          }}
+          style={[
+            style.boldFont,
+            style.textDefaultColor,
+            {
+              fontSize: 24,
+            },
+          ]}
         >
           Login
         </Text>
         <View style={{ flexDirection: "row", gap: 4 }}>
           <Text
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              color: Colors.Text_Light.Secondary,
-            }}
+            style={[
+              style.regularFont,
+              {
+                color: Colors.Text_Light.Secondary,
+              },
+            ]}
           >
             Don't have an account?
           </Text>
           <Link href="/register" asChild replace>
             <Text
-              style={{
-                fontFamily: "WorkSans_600SemiBold",
-                color: Colors.Wewak[600],
-              }}
+              style={[
+                style.semiBoldFont,
+                {
+                  color: Colors.Wewak[600],
+                },
+              ]}
             >
               Register
             </Text>
           </Link>
         </View>
       </View>
-      <TextInput
-        placeholder="Email Address"
-        style={{
-          backgroundColor: "#E3E3E3",
-          borderRadius: 16,
-          padding: 16,
-        }}
-      />
-      <TextInput
-        placeholder="Password"
-        style={{
-          backgroundColor: "#E3E3E3",
-          borderRadius: 16,
-          padding: 16,
-        }}
-      />
+      <TextInput placeholder="Email Address" style={style.textInputStyle} />
+      <TextInput placeholder="Password" style={style.textInputStyle} />
       <Pressable
         onPress={() => {
           router.replace("/login");
         }}
         style={({ pressed }) => [
+          style.pressableStyle,
           {
-            backgroundColor: Colors.Wewak[600],
             opacity: pressed ? 0.7 : 1,
-            paddingHorizontal: 24,
-            paddingVertical: 8,
-            borderRadius: 16,
-            alignItems: "center",
           },
         ]}
       >
         <Text
-          style={{
-            fontFamily: "WorkSans_400Regular",
-            color: Colors.Wewak[50],
-          }}
+          style={[
+            style.regularFont,
+            {
+              color: Colors.Wewak[50],
+            },
+          ]}
         >
           Login
         </Text>
@@ -101,5 +91,35 @@ const style = StyleSheet.create({
     justifyContent: "flex-end",
     backgroundColor: Colors.Wewak[50],
     gap: 16,
+  },
+  regularFont: {
+    fontFamily: "WorkSans_400Regular",
+  },
+  semiBoldFont: {
+    fontFamily: "WorkSans_600SemiBold",
+  },
+  boldFont: {
+    fontFamily: "WorkSans_700Bold",
+  },
+  blackFont: {
+    fontFamily: "WorkSans_900Black",
+  },
+  textDefaultColor: {
+    color: Colors.Text_Light.Default,
+  },
+  textSecondaryColor: {
+    color: Colors.Text_Light.Secondary,
+  },
+  pressableStyle: {
+    backgroundColor: Colors.Wewak[600],
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 16,
+    alignItems: "center",
+  },
+  textInputStyle: {
+    backgroundColor: "#E3E3E3",
+    borderRadius: 16,
+    padding: 16,
   },
 });
