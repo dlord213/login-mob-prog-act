@@ -1,4 +1,4 @@
-import { Link, SplashScreen, useRouter } from "expo-router";
+import { SplashScreen, useRouter } from "expo-router";
 import {
   Pressable,
   StyleSheet,
@@ -6,6 +6,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { StatusBar } from "expo-status-bar";
 import {
   WorkSans_400Regular,
   WorkSans_600SemiBold,
@@ -13,11 +17,11 @@ import {
   WorkSans_900Black,
   useFonts,
 } from "@expo-google-fonts/work-sans";
-import { useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "@/constants/Colors";
-import { StatusBar } from "expo-status-bar";
+
 import Carousel from "pinar";
+
+import Colors from "@/constants/Colors";
+import data from "@/constants/LandingData";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,24 +36,6 @@ export default function Index() {
 
   const router = useRouter();
 
-  const data = [
-    {
-      title: "Stay focused, achieve more",
-      description:
-        "Unlock your full potential with our built-in Pomodoro timer and focus tools designed to help you stay on track.",
-    },
-    {
-      title: "Organize your study life",
-      description:
-        "Keep all your notes in one place and easily manage your tasks. Study smarter, not harder.",
-    },
-    {
-      title: "Boost your productivity",
-      description:
-        "With our tools, you can schedule your study time, set goals, and track your progress effortlessly.",
-    },
-  ];
-
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
@@ -63,11 +49,13 @@ export default function Index() {
   return (
     <SafeAreaView style={style.safeAreaView}>
       <Text
-        style={{
-          fontFamily: "WorkSans_900Black",
-          color: Colors.Text_Light.Default,
-          fontSize: 36,
-        }}
+        style={[
+          style.blackFont,
+          style.textDefaultColor,
+          {
+            fontSize: 36,
+          },
+        ]}
       >
         étudier
       </Text>
@@ -81,20 +69,24 @@ export default function Index() {
         {data.map((elem) => (
           <View key={elem.title}>
             <Text
-              style={{
-                fontFamily: "WorkSans_700Bold",
-                color: Colors.Text_Light.Secondary,
-                fontSize: 24,
-              }}
+              style={[
+                style.boldFont,
+                style.textSecondaryColor,
+                {
+                  fontSize: 24,
+                },
+              ]}
             >
               {elem.title}
             </Text>
             <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Secondary,
-                fontSize: 16,
-              }}
+              style={[
+                style.regularFont,
+                style.textSecondaryColor,
+                {
+                  fontSize: 16,
+                },
+              ]}
             >
               {elem.description}
             </Text>
@@ -107,22 +99,19 @@ export default function Index() {
             router.replace("/login");
           }}
           style={({ pressed }) => [
+            style.pressableStyle,
             {
-              backgroundColor: Colors.Wewak[200],
               opacity: pressed ? 0.7 : 1,
-              paddingHorizontal: 24,
-              paddingVertical: 8,
-              borderRadius: 16,
-              alignItems: "center",
-              flex: 1,
             },
           ]}
         >
           <Text
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              color: Colors.Wewak[500],
-            }}
+            style={[
+              style.regularFont,
+              {
+                color: Colors.Wewak[500],
+              },
+            ]}
           >
             Login
           </Text>
@@ -132,28 +121,24 @@ export default function Index() {
             router.replace("/register");
           }}
           style={({ pressed }) => [
+            style.pressableStyle,
             {
-              backgroundColor: Colors.Wewak[500],
               opacity: pressed ? 0.7 : 1,
-              paddingHorizontal: 24,
-              paddingVertical: 8,
-              borderRadius: 16,
-              alignItems: "center",
-              flex: 1,
             },
           ]}
         >
           <Text
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              color: Colors.Wewak[50],
-            }}
+            style={[
+              style.regularFont,
+              {
+                color: Colors.Wewak[50],
+              },
+            ]}
           >
             Register
           </Text>
         </Pressable>
       </View>
-
       <StatusBar style="inverted" />
     </SafeAreaView>
   );
@@ -165,5 +150,31 @@ const style = StyleSheet.create({
     padding: 16,
     justifyContent: "flex-end",
     backgroundColor: Colors.Wewak[50],
+  },
+  regularFont: {
+    fontFamily: "WorkSans_400Regular",
+  },
+  semiBoldFont: {
+    fontFamily: "WorkSans_600SemiBold",
+  },
+  boldFont: {
+    fontFamily: "WorkSans_700Bold",
+  },
+  blackFont: {
+    fontFamily: "WorkSans_900Black",
+  },
+  textDefaultColor: {
+    color: Colors.Text_Light.Default,
+  },
+  textSecondaryColor: {
+    color: Colors.Text_Light.Secondary,
+  },
+  pressableStyle: {
+    backgroundColor: Colors.Wewak[200],
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 16,
+    alignItems: "center",
+    flex: 1,
   },
 });
