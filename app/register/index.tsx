@@ -34,7 +34,7 @@ export default function Page() {
           <Text style={[style.regularFont, style.textSecondaryColor]}>
             Already have an account?
           </Text>
-          <Link href="/login" asChild replace>
+          <Link href="/login" replace>
             <Text
               style={[
                 style.boldFont,

@@ -131,7 +131,7 @@ export default function Index() {
             style={[
               style.regularFont,
               {
-                color: Colors.Wewak[50],
+                color: Colors.Wewak[500],
               },
             ]}
           >

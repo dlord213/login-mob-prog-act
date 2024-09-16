@@ -30,7 +30,7 @@ export default function Page() {
         >
           Login
         </Text>
-        <View style={{ flexDirection: "row", gap: 4 }}>
+        <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
           <Text
             style={[
               style.regularFont,
@@ -41,7 +41,7 @@ export default function Page() {
           >
             Don't have an account?
           </Text>
-          <Link href="/register" asChild replace>
+          <Link href="/register" replace>
             <Text
               style={[
                 style.semiBoldFont,
