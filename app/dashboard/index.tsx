@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import * as SecureStorage from "expo-secure-store";
 
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Colors from "@/constants/Colors";
+import style from "@/styles/dashboard";
 
 export default function Page() {
   const [emailAddress, setEmailAddress] = useState<string | null>(null);
@@ -19,6 +19,11 @@ export default function Page() {
     } else {
       router.replace("/login");
     }
+  };
+
+  const handleLogout = async () => {
+    router.replace("/");
+    await SecureStorage.deleteItemAsync("email-address");
   };
 
   useEffect(() => {
@@ -46,9 +51,7 @@ export default function Page() {
         </View>
         <Pressable
           style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
-          onPress={() => {
-            router.replace("/");
-          }}
+          onPress={handleLogout}
         >
           <MaterialIcons
             name="logout"
@@ -61,31 +64,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const style = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "flex-start",
-    backgroundColor: Colors.Wewak[50],
-    gap: 16,
-  },
-  regularFont: {
-    fontFamily: "WorkSans_400Regular",
-  },
-  semiBoldFont: {
-    fontFamily: "WorkSans_600SemiBold",
-  },
-  boldFont: {
-    fontFamily: "WorkSans_700Bold",
-  },
-  blackFont: {
-    fontFamily: "WorkSans_900Black",
-  },
-  textDefaultColor: {
-    color: Colors.Text_Light.Default,
-  },
-  textSecondaryColor: {
-    color: Colors.Text_Light.Secondary,
-  },
-});
