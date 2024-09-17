@@ -16,6 +16,7 @@ export default function RootLayout() {
         name="login/index"
         options={{ animation: "fade_from_bottom" }}
       />
+      <Stack.Screen name="dashboard/index" />
     </Stack>
   );
 }
