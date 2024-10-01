@@ -1,16 +1,19 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TextInput, View, Pressable, ToastAndroid } from "react-native";
 import { Link, router } from "expo-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import * as SecureStorage from "expo-secure-store";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import style from "@/styles/login";
 import Colors from "@/constants/Colors";
+import UserContext from "@/contexts/UserContext";
 
 export default function Page() {
-  const [emailAddress, setEmailAddress] = useState<string | null>(null);
+  const { emailAddress, setEmailAddress, setLoggedInState } =
+    useContext(UserContext);
+
   const [password, setPassword] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +33,7 @@ export default function Page() {
 
     setError(null);
     await SecureStorage.setItemAsync("email-address", emailAddress);
+    setLoggedInState(true);
     router.replace("/dashboard");
     ToastAndroid.show(
       `${emailAddress} - ${password} / Logged In`,

@@ -2,14 +2,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View, Pressable, TextInput, ToastAndroid } from "react-native";
 import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import * as SecureStorage from "expo-secure-store";
 
 import style from "@/styles/register";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Colors from "@/constants/Colors";
+import UserContext from "@/contexts/UserContext";
 
 export default function Page() {
-  const [emailAddress, setEmailAddress] = useState<string | null>(null);
+  const { emailAddress, setEmailAddress, setLoggedInState } =
+    useContext(UserContext);
+
   const [password, setPassword] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,11 +25,13 @@ export default function Page() {
     return false;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!validateEmail(emailAddress)) {
       setError("Please enter a valid email address.");
       return;
     }
+    await SecureStorage.setItemAsync("email-address", emailAddress);
+    setLoggedInState(true);
     setError(null);
     router.replace("/dashboard");
     ToastAndroid.show(
