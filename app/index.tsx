@@ -1,7 +1,14 @@
 import { SplashScreen, useRouter } from "expo-router";
-import { Pressable, Text, useWindowDimensions, View } from "react-native";
-import { useContext, useEffect } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
 
 import { StatusBar } from "expo-status-bar";
 import {
@@ -19,6 +26,9 @@ import data from "@/constants/LandingData";
 import style from "@/styles/landing_page";
 import UserContext from "@/contexts/UserContext";
 
+import SparkAnimation from "../assets/lottie/spark.json";
+import TimerAnimation from "../assets/lottie/timer.json";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
@@ -30,10 +40,22 @@ export default function Index() {
   });
 
   const { loggedInState } = useContext(UserContext);
+  const { height, width } = useWindowDimensions();
 
-  const { height } = useWindowDimensions();
+  const screenHeight = useMemo(() => height, [height]);
+  const screenWidth = useMemo(() => width, [width]);
 
   const router = useRouter();
+
+  const [showTimer, setShowTimer] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowTimer((prev) => !prev);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [showTimer]);
 
   useEffect(() => {
     if (loaded || error) {
@@ -44,28 +66,31 @@ export default function Index() {
     }
   }, [loaded, error, loggedInState]);
 
-  if (!loaded && !error) {
-    return null;
-  }
+  const memoizedLottieView = useMemo(() => {
+    return showTimer ? (
+      <LottieView
+        source={SparkAnimation}
+        autoPlay
+        loop
+        style={{ width: screenWidth, height: screenHeight }}
+      />
+    ) : (
+      <LottieView
+        source={TimerAnimation}
+        autoPlay
+        loop
+        style={{ width: screenWidth, height: screenHeight }}
+      />
+    );
+  }, [showTimer, screenHeight, screenWidth]);
 
-  return (
-    <SafeAreaView style={style.safeAreaView}>
-      <Text
-        style={[
-          style.blackFont,
-          style.textDefaultColor,
-          {
-            fontSize: 36,
-          },
-        ]}
-      >
-        étudier
-      </Text>
+  const memoizedCarousel = useMemo(
+    () => (
       <Carousel
         loop
         autoplay
         autoplayInterval={5000}
-        height={height / 5}
+        height={screenHeight / 5}
         showsControls={false}
       >
         {data.map((elem) => (
@@ -95,53 +120,90 @@ export default function Index() {
           </View>
         ))}
       </Carousel>
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <Pressable
-          onPress={() => {
-            router.replace("/login");
-          }}
-          style={({ pressed }) => [
-            style.pressableStyle,
+    ),
+    [screenHeight]
+  );
+
+  if (!loaded && !error) {
+    return null;
+  }
+
+  if (!loggedInState) {
+    return (
+      <SafeAreaView style={style.safeAreaView}>
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          {memoizedLottieView}
+        </View>
+        <Text
+          style={[
+            style.blackFont,
+            style.textDefaultColor,
             {
-              opacity: pressed ? 0.7 : 1,
+              fontSize: 36,
             },
           ]}
         >
-          <Text
-            style={[
-              style.regularFont,
+          étudier
+        </Text>
+        {memoizedCarousel}
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Pressable
+            onPress={() => {
+              router.replace("/login");
+            }}
+            style={({ pressed }) => [
+              style.pressableStyle,
               {
-                color: Colors.Wewak[500],
+                opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
-            Login
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            router.replace("/register");
-          }}
-          style={({ pressed }) => [
-            style.pressableStyle,
-            {
-              opacity: pressed ? 0.7 : 1,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              style.regularFont,
+            <Text
+              style={[
+                style.regularFont,
+                {
+                  color: Colors.Wewak[500],
+                },
+              ]}
+            >
+              Login
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              router.replace("/register");
+            }}
+            style={({ pressed }) => [
+              style.pressableStyle,
               {
-                color: Colors.Wewak[500],
+                opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
-            Register
-          </Text>
-        </Pressable>
-      </View>
-      <StatusBar style="inverted" />
+            <Text
+              style={[
+                style.regularFont,
+                {
+                  color: Colors.Wewak[500],
+                },
+              ]}
+            >
+              Register
+            </Text>
+          </Pressable>
+        </View>
+        <StatusBar style="inverted" />
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+    >
+      <ActivityIndicator size={64} color={Colors.Wewak[600]} />
     </SafeAreaView>
   );
 }
